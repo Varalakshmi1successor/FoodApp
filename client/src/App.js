@@ -1,33 +1,64 @@
-import { Route, Routes, Navigate } from "react-router-dom";
-import Main from "./components/Main";
-import Signup from "./components/Signup";
-import Login from "./components/Login";
-import EmailVerify from "./components/EmailVerify";
-import ForgotPassword from "./components/ForgotPassword";
-import PasswordReset from "./components/PasswordReset";
-import Adminmain from "./components/Adminmain";
+import React from 'react';
+import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
+import Main from './components/Main/index';
+import NotFound from './components/Main/NotFound';
+import Cart from './components/Main/Cart';
+import CheckoutSuccess from './components/Main/CheckoutSuccess';
+import 'react-toastify/dist/ReactToastify.css';
+import Signup from './components/Signup';
+import Login from './components/Login';
+import EmailVerify from './components/EmailVerify';
+import ForgotPassword from './components/ForgotPassword';
+import PasswordReset from './components/PasswordReset';
+import Dashboard from './components/Adminmain/AdminMainPage';
+import Products from './components/Adminmain/Products';
+import Users from './components/Adminmain/Users';
+import Orders from './components/Adminmain/Orders';
+import Summary from './components/Adminmain/Summary';
+
+
 function App() {
-	const user = localStorage.getItem("token");
-    const userType = localStorage.getItem("userType");
-	return (
-		<Routes>
-			
+  const user = localStorage.getItem('token');
+  const userType = localStorage.getItem('userType');
+
+  return (
+    <div className="App">
+      <BrowserRouter>
+        <ToastContainer />
+        <div className="content-container">
+          <Routes>
             {user ? (
-                userType === "Admin" ? (
-                    <Route path="/" element={<Adminmain />} />
-                ) : (
-                    <Route path="/" element={<Main />} />
-                )
+              userType === 'Admin' ? (
+                <>
+                  <Route path="/" element={<Dashboard />}>
+                    <Route path="summary" element={<Summary />} />
+                    <Route path="products" element={<Products />}/>
+                      
+                    
+                    <Route path="users" element={<Users />} />
+                    <Route path="orders" element={<Orders />} />
+                  </Route>
+                </>
+              ) : (
+                <Route path="/" element={<Main />} />
+              )
             ) : (
-                <Route path="/" element={<Navigate replace to="/login" />} />
+              <Route path="/" element={<Navigate replace to="/login" />} />
             )}
-			<Route path="/signup" element={<Signup />} />
-			<Route path="/login" element={<Login />} />
-			<Route path="/users/:id/verify/:token" element={<EmailVerify />} />
-			<Route path="/forgot-password" element={<ForgotPassword />} />
-			<Route path="/password-reset/:id/:token" element={<PasswordReset />} />
-		</Routes>
-	);
+            <Route path="/cart" element={<Cart />} />
+            <Route path="/checkout-success" element={<CheckoutSuccess />} />
+            <Route path="/signup" element={<Signup />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="*" element={<NotFound />} />
+            <Route path="/users/:id/verify/:token" element={<EmailVerify />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/password-reset/:id/:token" element={<PasswordReset />} />
+          </Routes>
+        </div>
+      </BrowserRouter>
+    </div>
+  );
 }
 
 export default App;
